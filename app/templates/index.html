@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FossilFinder - Identify Your Fossil Discoveries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <img src="{{ url_for('static', filename='images/FossilFinderLogo.png') }}" alt="FossilFinder Logo" class="logo">
+        </header>
+        
+        <div class="container">
+            <div class="content-box">
+                <h1>Introduction</h1>
+                <p>Welcome to FossilFinder, your AI-powered assistant for fossil identification! Whether you're an amateur fossil hunter, 
+                student, or just curious about a rock you've found, our tool helps identify and learn about fossils.</p>
+            </div>
+
+            <div class="upload-container">
+                <div class="upload-box" id="upload-box">
+                    <div class="upload-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16L12 8M12 8L15 11M12 8L9 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12Z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <p>Choose from files</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none">
+                </div>
+                <img id="preview" alt="Preview">
+            </div>
+
+            <button id="analyze-btn" class="gradient-btn">Generate</button>
+            <div id="result"></div>
+            <div id="fossil-info" class="fossil-info">
+                <div class="fossil-description"></div>
+                <div class="fossil-examples"></div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
