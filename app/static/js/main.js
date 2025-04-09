@@ -1,4 +1,4 @@
-function typeText(element, text, speed = 20) {
+function typeText(element, text, speed = 15) {
     element.textContent = '';
     return new Promise(resolve => {
         let i = 0;
