@@ -20,7 +20,7 @@ from config import MODEL_NAME
 
 class BrandweerApp:
     """
-    Terminal-based chat interface for firefighting strategy advice.
+    Terminal-based chat interface for fossil advice.
     """
 
     def __init__(self):
@@ -40,9 +40,9 @@ class BrandweerApp:
         self.console.clear()
         self.console.print(
             Panel.fit(
-                f"[bold blue]Brandweer Strategie Advies[/bold blue]\n\n"
-                f"Gebruikt model: [green]{MODEL_NAME}[/green]\n\n"
-                f"Type [bold]/help[/bold] voor beschikbare commando's",
+                f"[bold blue]FossilFinder Chatbot[/bold blue]\n\n"
+                f"Using model: [green]{MODEL_NAME}[/green]\n\n"
+                f"Type [bold]/help[/bold] for available commando's",
                 title="Welkom",
                 border_style="blue",
             )
@@ -54,11 +54,11 @@ class BrandweerApp:
         Display the help message.
         """
         help_text = """
-        [bold]Beschikbare Commando's:[/bold]
+        [bold]Available Commando's:[/bold]
         
-        [green]/help[/green] - Toon dit help bericht
-        [green]/reset[/green] - Reset het gesprek
-        [green]/exit[/green] of [green]/quit[/green] - Verlaat de applicatie
+        [green]/help[/green] - Show this help message
+        [green]/reset[/green] - Reset the conversation
+        [green]/exit[/green] of [green]/quit[/green] - Exit the application
         """
         self.console.print(Panel(Markdown(help_text), title="Help", border_style="green"))
         self.console.print()
@@ -68,7 +68,7 @@ class BrandweerApp:
         Reset the conversation history.
         """
         self.client.reset_conversation()
-        self.console.print("[green]Gesprek gereset[/green]")
+        self.console.print("[green]Conversation reset[/green]")
 
     def process_command(self, command: str) -> bool:
         """
@@ -94,7 +94,7 @@ class BrandweerApp:
                 self.reset_conversation()
                 return True
             else:
-                self.console.print(f"[red]Onbekend commando: {cmd}[/red]")
+                self.console.print(f"[red]Unknown commando: {cmd}[/red]")
                 self.display_help()
                 return True
         
@@ -112,7 +112,7 @@ class BrandweerApp:
         
         # Generate the response
         try:
-            with self.console.status("[bold blue]Bezig met analyseren...[/bold blue]"):
+            with self.console.status("[bold blue]Analysing...[/bold blue]"):
                 response = self.client.generate(
                     prompt=formatted_template["user"],
                     system_prompt=formatted_template["system"],
@@ -121,12 +121,12 @@ class BrandweerApp:
             # Display the response
             self.console.print(Panel(
                 Markdown(response),
-                title="Advies",
+                title="Advice",
                 border_style="green",
             ))
                 
         except Exception as e:
-            self.console.print(f"[red]Fout: {str(e)}[/red]")
+            self.console.print(f"[red]Error: {str(e)}[/red]")
 
     def run(self):
         """
@@ -136,7 +136,7 @@ class BrandweerApp:
         
         while self.running:
             try:
-                user_input = Prompt.ask("\n[bold green]Brandweer[/bold green]")
+                user_input = Prompt.ask("\n[bold green]User[/bold green]")
                 
                 if not user_input.strip():
                     continue
@@ -145,12 +145,12 @@ class BrandweerApp:
                     self.generate_response(user_input)
                     
             except KeyboardInterrupt:
-                self.console.print("\n[yellow]Onderbroken. Type /exit om te stoppen.[/yellow]")
+                self.console.print("\n[yellow]Interupted. Type /exit om to exit.[/yellow]")
             except EOFError:
-                self.console.print("\n[green]Tot ziens![/green]")
+                self.console.print("\n[green]Goodbye![/green]")
                 break
             except Exception as e:
-                self.console.print(f"[red]Fout: {str(e)}[/red]")
+                self.console.print(f"[red]Error: {str(e)}[/red]")
 
 
 def main():

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to run the Brandweer Strategie Advies application.
+Script to run the FossilFinder chatbot application.
 """
 
 import os
@@ -13,12 +13,12 @@ def main():
     Main entry point.
     """
     # Check if Ollama is running and the model is available
-    print("Controleren van Ollama setup...")
+    print("Checking Ollama setup...")
     
     try:
         # Use subprocess.run with encoding specified to avoid encoding issues
         result = subprocess.run(
-            ["python", "check_ollama.py"], 
+            ["python", "Fossil Chatbot/check_ollama.py"], 
             capture_output=True, 
             text=True,
             encoding='utf-8',
@@ -28,19 +28,19 @@ def main():
         if result.returncode != 0:
             print(result.stdout)
             print(result.stderr)
-            print("\nDruk op Enter om af te sluiten...")
+            print("\nPress enter to exit...")
             input()
             sys.exit(result.returncode)
         
         print(result.stdout)
-        print("\nStart Brandweer Strategie Advies...")
+        print("\nStarting FossilFinder advice...")
         
         # Run the main application
-        subprocess.run(["python", "main.py"])
+        subprocess.run(["python", "Fossil ChatBot/main.py"])
         
     except Exception as e:
         print(f"Fout: {str(e)}")
-        print("\nDruk op Enter om af te sluiten...")
+        print("\nPress enter to exit ...")
         input()
         sys.exit(1)
 

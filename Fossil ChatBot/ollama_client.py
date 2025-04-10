@@ -37,7 +37,7 @@ class OllamaClient:
         self.conversation_history: List[Dict[str, str]] = []
         self.last_request_time = 0
         self.min_request_interval = 0.1  # Minimum time between requests in seconds
-        self.request_timeout = 30  # Default timeout in seconds
+        self.request_timeout = 60  # Default timeout in seconds
 
     def generate(
         self,

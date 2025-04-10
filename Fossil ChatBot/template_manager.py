@@ -16,7 +16,7 @@ class TemplateManager:
         """
         Initialize the template manager.
         """
-        self.current_template = "brandbestrijding"
+        self.current_template = "fossil advice"
         self.template_data = get_template(self.current_template)
         self.custom_variables: Dict[str, Any] = {}
 
