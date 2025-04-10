@@ -1,15 +1,10 @@
-"""
-Client for interacting with the Ollama API.
-"""
-
 import json
 import requests
 import time
-import threading
+from FossilChatBot.config import OLLAMA_API_URL, MODEL_NAME, DEFAULT_PARAMS
+
 from typing import Dict, List, Optional, Union, Any, Callable
 from functools import lru_cache
-
-from config import OLLAMA_API_URL, MODEL_NAME, DEFAULT_PARAMS
 
 
 class OllamaClient:

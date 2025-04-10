@@ -18,7 +18,7 @@ from template_manager import TemplateManager
 from config import MODEL_NAME
 
 
-class BrandweerApp:
+class FossilBot:
     """
     Terminal-based chat interface for fossil advice.
     """
@@ -170,7 +170,7 @@ def main():
     """
     Main entry point.
     """
-    app = BrandweerApp()
+    app = FossilBot()
     app.run()
 
 

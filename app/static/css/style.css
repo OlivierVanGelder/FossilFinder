@@ -179,6 +179,33 @@ header {
     line-height: 1.4;
 }
 
+.chat-result {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    background: white;
+}
+
+.chat-message.error {
+    color: #d9534f;
+    background: #fdf7f7;
+}
+
+.chat-sender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
 @media (max-width: 768px) {
     .content-box,
     .upload-container {

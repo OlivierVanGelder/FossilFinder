@@ -7,6 +7,9 @@ def create_app():
     
     # Register blueprints
     from app.routes.main import main_bp
+    from app.routes.chat import chat_bp  # <-- Add this
+
     app.register_blueprint(main_bp)
-    
+    app.register_blueprint(chat_bp)      # <-- And this
+
     return app

@@ -38,6 +38,16 @@
                 <div class="fossil-description"></div>
                 <div class="fossil-examples"></div>
             </div>
+
+            <!-- This will be shown only after generation -->
+            <div id="chat-interface" style="display: none;">
+                <h2>Ask FossilFinder</h2>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Ask me anything about this fossil..." />
+                    <button id="chat-btn">Send</button>
+                </div>
+                <div id="chat-result" class="chat-result"></div>
+            </div>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

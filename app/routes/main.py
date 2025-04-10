@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify
 from app.models.classifier import FossilClassifier
+from app.routes.chat import chat_bp
 
 main_bp = Blueprint('main', __name__)
 classifier = FossilClassifier()
+
+main_bp.register_blueprint(chat_bp)
 
 @main_bp.route('/')
 def home():
