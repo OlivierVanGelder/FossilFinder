@@ -43,7 +43,7 @@ class BrandweerApp:
                 f"[bold blue]FossilFinder Chatbot[/bold blue]\n\n"
                 f"Using model: [green]{MODEL_NAME}[/green]\n\n"
                 f"Type [bold]/help[/bold] for available commando's",
-                title="Welkom",
+                title="Welcome",
                 border_style="blue",
             )
         )
@@ -102,29 +102,42 @@ class BrandweerApp:
 
     def generate_response(self, user_input: str):
         """
-        Generate a response from the model.
+        Generate a streamed response from the model.
         
         Args:
             user_input (str): The user input.
         """
         # Format the prompt using the current template
         formatted_template = self.template_manager.format_prompt(user_input)
-        
-        # Generate the response
+
         try:
-            with self.console.status("[bold blue]Analysing...[/bold blue]"):
-                response = self.client.generate(
-                    prompt=formatted_template["user"],
-                    system_prompt=formatted_template["system"],
-                )
-            
-            # Display the response
-            self.console.print(Panel(
-                Markdown(response),
-                title="Advice",
-                border_style="green",
-            ))
-                
+            # Start streaming from the model
+            response_stream = self.client.generate(
+                prompt=formatted_template["user"],
+                system_prompt=formatted_template["system"],
+                stream=True  # << Enable streaming here
+            )
+
+            self.console.print(Panel.fit("💬 [bold green]Model is thinking...[/bold green]", border_style="blue"))
+
+            full_response = ""
+
+            print("[debug] Starting to read stream...")
+
+            for chunk in response_stream:
+                if not isinstance(chunk, dict):
+                    continue
+
+                if chunk.get("done"):
+                    break
+
+                text = chunk.get("response", "")
+                if text:
+                    print(text, end="", flush=True)
+
+            print()
+            self.console.print(Panel(Markdown(full_response), title="Advice", border_style="green"))
+
         except Exception as e:
             self.console.print(f"[red]Error: {str(e)}[/red]")
 

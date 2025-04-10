@@ -115,45 +115,8 @@ class OllamaClient:
             else:
                 return self._handle_response(response)
                 
-        except requests.exceptions.Timeout:
-            # If we have a fallback callback, use it
-            if fallback_callback:
-                return fallback_callback()
-            else:
-                # Generate a simple fallback response
-                return self._generate_fallback_response(prompt)
-                
         except requests.exceptions.RequestException as e:
             raise Exception(f"Request error: {str(e)}")
-    
-    def _generate_fallback_response(self, prompt: str) -> str:
-        """
-        Generate a simple fallback response when the model times out.
-        
-        Args:
-            prompt (str): The user prompt.
-            
-        Returns:
-            str: A fallback response.
-        """
-        # Simple fallback response based on keywords in the prompt
-        prompt_lower = prompt.lower()
-        
-        if "defensief" in prompt_lower and "buiten" in prompt_lower:
-            return "Defensieve buiteninzet\n---------------------------------\nDeze strategie is geschikt voor situaties waarbij de brand zich heeft verspreid en directe interventie te gevaarlijk is. Door van buitenaf te blussen, kan de brand worden ingeperkt zonder dat brandweerlieden onnodig risico lopen.\n\nMonitor de situatie en pas de strategie aan als de omstandigheden veranderen. Zorg voor voldoende water en blusmiddelen."
-        
-        elif "offensief" in prompt_lower and "buiten" in prompt_lower:
-            return "Offensieve buiteninzet\n---------------------------------\nDeze strategie is effectief wanneer er slachtoffers in het gebouw zijn, maar directe toegang te gevaarlijk is. Door van buitenaf te blussen, kunnen de omstandigheden binnen verbeteren en kan een veilige toegang worden gecreëerd.\n\nBereid je voor op een mogelijke overgang naar een offensieve binneninzet zodra de omstandigheden het toelaten."
-        
-        elif "defensief" in prompt_lower and "binnen" in prompt_lower:
-            return "Defensieve binneninzet\n---------------------------------\nDeze strategie is geschikt wanneer er nog mensen in het gebouw zijn die geëvacueerd moeten worden, maar de brand nog niet volledig is ingeperkt. Door strategisch binnen te gaan, kunnen evacuaties worden gefaciliteerd terwijl de brand wordt bestreden.\n\nZorg voor goede communicatie tussen de binnen- en buitenploegen en heb een duidelijk terugtrekkingsplan."
-        
-        elif "offensief" in prompt_lower and "binnen" in prompt_lower:
-            return "Offensieve binneninzet\n---------------------------------\nDeze strategie is nodig wanneer er directe redding van mensenlevens vereist is en de brand nog beperkt is. Door snel binnen te gaan, kunnen slachtoffers worden gered voordat de brand zich verder verspreidt.\n\nZorg voor voldoende beveiliging en een duidelijk communicatieplan met de buitenploeg."
-        
-        else:
-            # Generic response if no specific keywords are found
-            return "Defensieve buiteninzet\n---------------------------------\nOp basis van de beschreven situatie lijkt een defensieve buiteninzet de meest geschikte strategie. Deze aanpak minimaliseert risico's voor brandweerlieden terwijl de brand wordt ingeperkt.\n\nMonitor de situatie en pas de strategie aan als de omstandigheden veranderen."
     
     def _handle_response(self, response: requests.Response) -> str:
         """
@@ -173,22 +136,29 @@ class OllamaClient:
             
         return data.get("response", "")
     
-    def _handle_stream_response(self, response: requests.Response) -> Dict[str, Any]:
+    def _handle_stream_response(self, response: requests.Response) -> str:
         """
-        Handle a streaming response.
+        Handle a streaming response from the model.
         
         Args:
             response (requests.Response): The API response.
             
         Returns:
-            Dict[str, Any]: Information about the streaming response.
+            str: The model's response printed in real-time.
         """
-        # This is a simplified implementation
-        # In a real application, you would process the stream
-        return {
-            "stream": response.iter_lines(),
-            "status": "streaming",
-        }
+        full_response = ""
+        for line in response.iter_lines(decode_unicode=True):
+            if line:
+                try:
+                    data = json.loads(line)
+                    token = data.get("response", "")
+                    print(token, end="", flush=True)  # Output tokens directly
+                    full_response += token
+                except json.JSONDecodeError:
+                    continue
+        
+        print()  # Print final newline after streaming is complete
+        return full_response
     
     def reset_conversation(self) -> None:
         """
@@ -231,4 +201,4 @@ class OllamaClient:
         if response.status_code != 200:
             raise Exception(f"Error: {response.status_code} - {response.text}")
             
-        return response.json() 
+        return response.json()
