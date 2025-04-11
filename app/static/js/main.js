@@ -116,9 +116,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Simulate initial chat message with analysis
-    async function simulateInitialChat(fossilType, confidence) {
-        chatResult.textContent = 'FossilFinder is thinking...';
-        
+    async function simulateInitialChat(fossilType, confidence) {    
+        chatResult.innerHTML = ''; // Clear any previous content
+
+        const botLoading = document.createElement('div');
+        botLoading.className = 'chat-message fossilfinder';
+        botLoading.innerHTML = `<span class="chat-sender">FossilFinder</span>Thinking...`;
+        chatResult.appendChild(botLoading);
+        chatResult.scrollTop = chatResult.scrollHeight;
+
         try {
             const response = await fetch('/chat', {
                 method: 'POST',
@@ -128,15 +134,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     analysis: currentAnalysis 
                 })
             });
-            
+
             const data = await response.json();
             if (data.error) {
-                chatResult.textContent = '❌ ' + data.error;
+                botLoading.innerHTML = `<span class="chat-sender">FossilFinder</span>❌ ${data.error}`;
+                botLoading.classList.add('error');
             } else {
-                await typeText(chatResult, data.response);
+                botLoading.innerHTML = `<span class="chat-sender">FossilFinder</span>${data.response}`;
             }
         } catch (err) {
-            chatResult.textContent = '⚠️ Error: ' + err.message;
+            botLoading.innerHTML = `<span class="chat-sender">FossilFinder</span>⚠️ Error: ${err.message}`;
+            botLoading.classList.add('error');
         }
     }
 
@@ -145,9 +153,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = chatInput.value.trim();
         if (!message) return;
 
+        // User message bubble
+        const userMessage = document.createElement('div');
+        userMessage.className = 'chat-message user';
+        userMessage.innerHTML = `<span class="chat-sender">You</span>${message}`;
+        chatResult.appendChild(userMessage);
         chatInput.value = '';
-        const currentMessage = chatResult.textContent;
-        chatResult.textContent = currentMessage + '\n\nYou: ' + message + '\n\nFossilFinder is thinking...';
+        chatResult.scrollTop = chatResult.scrollHeight;
+
+        // Bot loading bubble
+        const botMessage = document.createElement('div');
+        botMessage.className = 'chat-message fossilfinder';
+        botMessage.innerHTML = `<span class="chat-sender">FossilFinder</span>Thinking...`;
+        chatResult.appendChild(botMessage);
+        chatResult.scrollTop = chatResult.scrollHeight;
 
         try {
             const response = await fetch('/chat', {
@@ -161,13 +180,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const data = await response.json();
             if (data.error) {
-                chatResult.textContent = currentMessage + '\n\nError: ' + data.error;
+                botMessage.innerHTML = `<span class="chat-sender">FossilFinder</span>❌ ${data.error}`;
+                botMessage.classList.add('error');
             } else {
-                chatResult.textContent = currentMessage + '\n\nYou: ' + message + '\n\nFossilFinder: ' + data.response;
+                botMessage.innerHTML = `<span class="chat-sender">FossilFinder</span>${data.response}`;
             }
         } catch (err) {
-            chatResult.textContent = currentMessage + '\n\nError: ' + err.message;
+            botMessage.innerHTML = `<span class="chat-sender">FossilFinder</span>⚠️ Error: ${err.message}`;
+            botMessage.classList.add('error');
         }
+
+        chatResult.scrollTop = chatResult.scrollHeight;
     });
 
     // Allow pressing Enter to send message
